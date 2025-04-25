@@ -12,6 +12,10 @@ app = Flask(__name__)
 ORDERS_DIR = os.environ.get('ORDERS_DIR', '.')
 ORDERS_FILE = os.path.join(ORDERS_DIR, 'orders.json')
 
+# Preberite e-poštne podatke iz okolja
+sender_email = os.environ.get('SENDER_EMAIL')
+sender_password = os.environ.get('SENDER_PASSWORD')
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -965,10 +969,6 @@ def products(brand_name, category):
 
 # Preureditev obstoječe funkcije send_admin_notification v splošno funkcijo za pošiljanje e-pošte
 def send_email(recipient, subject, message):
-    # E-poštni podatki
-    sender_email = "corysreps@gmail.com"
-    sender_password = "ntxy xbni ckfu whuw"  # App password
-    
     # Ustvarite sporočilo
     msg = MIMEMultipart()
     msg['From'] = sender_email
