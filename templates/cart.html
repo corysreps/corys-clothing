@@ -230,9 +230,11 @@
                 
                 cartItems.forEach(item => {
                     totalPrice += parseFloat(item.price);
+                    const size = item.size ? ` (${item.size})` : '';
+                    
                     checkoutHTML += `
                         <div class="checkout-item">
-                            <div class="checkout-item-name">${item.name}</div>
+                            <div class="checkout-item-name">${item.name}${size}</div>
                             <div class="checkout-item-price">${parseFloat(item.price).toFixed(2)}€</div>
                         </div>
                     `;
@@ -284,7 +286,12 @@
                     email: email,
                     instagram: instagram,
                     total: total,
-                    items: cartItems
+                    items: cartItems.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        type: item.type,
+                        size: item.size || 'Ni izbrano'
+                    }))
                 };
                 
                 // Gumb za oddajo naročila - dodajte loading stanje
@@ -348,6 +355,9 @@
             cartItems.forEach((item, index) => {
                 totalPrice += parseFloat(item.price);
                 
+                // Določite privzeto velikost, če je ni
+                const itemSize = item.size || '';
+                
                 cartHTML += `
                     <div class="cart-item" data-index="${index}">
                         <div class="cart-item-image">
@@ -362,6 +372,18 @@
                             </div>
                             <div class="item-meta">
                                 <p class="cart-item-type">Tip: ${item.type}</p>
+                                
+                                <!-- Dodan izbirnik velikosti -->
+                                <div class="size-selector">
+                                    <label for="size-${index}">Velikost:</label>
+                                    <select id="size-${index}" class="size-select" data-index="${index}">
+                                        <option value="" ${itemSize === '' ? 'selected' : ''}>Izberi velikost</option>
+                                        <option value="S" ${itemSize === 'S' ? 'selected' : ''}>S</option>
+                                        <option value="M" ${itemSize === 'M' ? 'selected' : ''}>M</option>
+                                        <option value="L" ${itemSize === 'L' ? 'selected' : ''}>L</option>
+                                        <option value="XL" ${itemSize === 'XL' ? 'selected' : ''}>XL</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="cart-item-actions">
@@ -403,6 +425,30 @@
                 
                 item.addEventListener('mouseleave', function() {
                     this.classList.remove('hovered');
+                });
+            });
+
+            // Listener za spremembo velikosti
+            document.querySelectorAll('.size-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const newSize = this.value;
+                    
+                    // Posodobi velikost v lokalnem shrambi
+                    cartItems[index].size = newSize;
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    
+                    // Prikaži obvestilo o posodobitvi
+                    const toast = document.createElement('div');
+                    toast.className = 'size-update-toast';
+                    toast.textContent = 'Velikost posodobljena';
+                    document.body.appendChild(toast);
+                    
+                    // Odstrani obvestilo po 2 sekundah
+                    setTimeout(() => {
+                        toast.classList.add('hide');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 2000);
                 });
             });
             
@@ -661,6 +707,66 @@
             font-size: 0.9rem;
             color: var(--light-text);
             margin: 0;
+        }
+        
+        .size-selector {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .size-selector label {
+            margin-right: 10px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+
+        .size-select {
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background-color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .size-select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .size-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
+        }
+
+        .size-update-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .size-update-toast.hide {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
         }
         
         .cart-item-actions {
@@ -1360,4 +1466,3 @@
     </style>
 </body>
 </html>
-``` 

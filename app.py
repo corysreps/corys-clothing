@@ -5,8 +5,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
 from datetime import datetime
+import os
 
 app = Flask(__name__)
+
+ORDERS_DIR = os.environ.get('ORDERS_DIR', '.')
+ORDERS_FILE = os.path.join(ORDERS_DIR, 'orders.json')
 
 @app.route('/')
 def index():
@@ -1008,12 +1012,14 @@ def submit_order():
         # Sestavimo del sporočila s seznamom izdelkov (uporabno za obe e-pošti)
         items_list = ""
         for item in items:
-            item_line = f"- {item['name']} - {item['price']}€\n"
+            # Dodamo velikost v sporočilo
+            item_size = item.get('size', 'Ni izbrano')
+            item_line = f"- {item['name']} (Velikost: {item_size}) - {item['price']}€\n"
             admin_message += item_line
             items_list += item_line
         
         # Shrani naročilo v datoteko (za zgodovino)
-        with open('orders.json', 'a') as f:
+        with open(ORDERS_FILE, 'a') as f:
             order_data = {
                 'email': customer_email,
                 'instagram': customer_instagram,
