@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.capitalize() }} - {{ brand.capitalize() }} | StyleHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Cory's</div>
+            <div class="nav-buttons">
+                <a href="{{ url_for('index') }}" class="nav-button">Home</a>
+                <a href="{{ url_for('category') }}" class="nav-button">Category</a>
+                <a href="{{ url_for('about') }}" class="nav-button">About Us</a>
+                <a href="{{ url_for('cart') }}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="products-container">
+        <div class="filters-sidebar">
+            <h3>Filtri</h3>
+            
+            <div class="filter-group">
+                <h4>Cena</h4>
+                <label><input type="checkbox" name="price" value="0-30"> 0€ - 30€</label>
+                <label><input type="checkbox" name="price" value="30-50"> 30€ - 50€</label>
+                <label><input type="checkbox" name="price" value="50+"> 50€+</label>
+            </div>
+            
+            <div class="filter-group">
+                <h4>Tip</h4>
+                <label><input type="checkbox" name="type" value="short"> Kratke</label>
+                <label><input type="checkbox" name="type" value="long"> Dolge</label>
+            </div>
+            
+            <button class="apply-filters">Uporabi filtre</button>
+        </div>
+        
+        <div class="products-content">
+            <div class="products-header">
+                <h1>{{ brand.capitalize() }} {{ category.capitalize() }}</h1>
+                <p>{{ products|length }} izdelkov najdenih</p>
+            </div>
+            
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-item" data-price="{{ product.price }}" data-type="{{ product.type }}">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" 
+                             alt="{{ product.name }}"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/' + product.image_fallback) if 'image_fallback' in product else 'placeholder.jpg' }}';">
+                    </div>
+                    <div class="product-details">
+                        <h3>{{ product.name }}</h3>
+                        <div class="product-price-cart">
+                            <span class="product-price">{{ product.price }}€</span>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Cory's.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // JavaScript za filtriranje izdelkov
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const applyButton = document.querySelector('.apply-filters');
+            const productItems = document.querySelectorAll('.product-item');
+            
+            applyButton.addEventListener('click', function() {
+                // Pridobi izbrane filtre
+                const selectedPrices = Array.from(document.querySelectorAll('input[name="price"]:checked')).map(el => el.value);
+                const selectedTypes = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(el => el.value);
+                
+                // Če ni izbran noben filter, prikaži vse izdelke
+                if (selectedPrices.length === 0 && selectedTypes.length === 0) {
+                    productItems.forEach(item => item.style.display = 'block');
+                    return;
+                }
+                
+                // Filtriraj izdelke
+                productItems.forEach(item => {
+                    const price = parseFloat(item.dataset.price);
+                    const type = item.dataset.type;
+                    
+                    let priceMatch = selectedPrices.length === 0; // Če ni izbranih filtrov za ceno, se ujema avtomatsko
+                    let typeMatch = selectedTypes.length === 0; // Če ni izbranih filtrov za tip, se ujema avtomatsko
+                    
+                    // Preveri ujemanje cene
+                    for (const priceRange of selectedPrices) {
+                        if (priceRange === '0-30' && price <= 30) {
+                            priceMatch = true;
+                        } else if (priceRange === '30-50' && price > 30 && price <= 50) {
+                            priceMatch = true;
+                        } else if (priceRange === '50+' && price > 50) {
+                            priceMatch = true;
+                        }
+                    }
+                    
+                    // Preveri ujemanje tipa
+                    if (selectedTypes.includes(type)) {
+                        typeMatch = true;
+                    }
+                    
+                    // Prikaži ali skrij izdelek glede na filtre
+                    if (priceMatch && typeMatch) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Preberi izdelke iz localStorage
+                let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                const cartCount = document.querySelector('.cart-count');
+                
+                // Posodobi števec izdelkov v košarici
+                cartCount.textContent = cartItems.length;
+                
+                // Dodaj funkcionalnost gumbom za dodajanje v košarico
+                const addToCartButtons = document.querySelectorAll('.add-to-cart');
+                console.log('Najdenih ' + addToCartButtons.length + ' gumbov za košarico');
+                
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        try {
+                            // Pridobi podatke o izbranem izdelku
+                            const productItem = this.closest('.product-item');
+                            if (!productItem) {
+                                console.error('Ne najdem starševskega elementa product-item');
+                                return;
+                            }
+                            
+                            const productName = productItem.querySelector('h3').textContent;
+                            
+                            // Popravek za ceno - odstrani € znak
+                            const priceText = productItem.querySelector('.product-price').textContent;
+                            const productPrice = parseFloat(priceText.replace('€', '').trim());
+                            
+                            if (isNaN(productPrice)) {
+                                console.error('Neveljaven format cene: ' + priceText);
+                                return;
+                            }
+                            
+                            const imgElement = productItem.querySelector('img');
+                            const productImage = imgElement.getAttribute('src').split('/').pop();
+                            const productType = productItem.dataset.type;
+                            
+                            console.log('Dodajam v košarico:', {
+                                name: productName,
+                                price: productPrice,
+                                image: productImage,
+                                type: productType
+                            });
+                            
+                            // Ustvari objekt izdelka
+                            const product = {
+                                name: productName,
+                                price: productPrice,
+                                image: productImage,
+                                type: productType,
+                                image_fallback: 'placeholder.jpg'
+                            };
+                            
+                            // Dodaj izdelek v košarico
+                            cartItems.push(product);
+                            
+                            // Shrani košarico v localStorage
+                            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                            
+                            // Posodobi števec košarice
+                            cartCount.textContent = cartItems.length;
+                            
+                            // Animacija za klik gumba
+                            this.classList.add('add-animation');
+                            setTimeout(() => {
+                                this.classList.remove('add-animation');
+                            }, 300);
+                            
+                        } catch (error) {
+                            console.error('Napaka pri dodajanju v košarico:', error);
+                            alert('Napaka pri dodajanju v košarico: ' + error.message);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Napaka pri inicializaciji košarice:', error);
+            }
+        });
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-button {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.2rem;
+            color: #333;
+            text-decoration: none;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            transform: translateY(-2px);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Products Container Styles */
+        .products-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+            gap: 30px;
+        }
+        
+        /* Filters Sidebar Styles */
+        .filters-sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            align-self: flex-start;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .filters-sidebar h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .apply-filters {
+            width: 100%;
+            padding: 10px 0;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .apply-filters:hover {
+            background-color: #555;
+        }
+        
+        /* Products Content Styles */
+        .products-content {
+            flex: 1;
+        }
+        
+        .products-header {
+            margin-bottom: 30px;
+        }
+        
+        .products-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .products-header p {
+            color: #777;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .product-details {
+            padding: 15px;
+        }
+        
+        .product-details h3 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .product-price-cart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-price {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        .add-to-cart {
+            background-color: #333;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #555;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 80px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 20px;
+        }
+        
+        .footer-section {
+            text-align: center;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: #ffffff;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .products-container {
+                flex-direction: column;
+            }
+            
+            .filters-sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .products-container {
+                margin-top: 130px;
+            }
+            
+            .products-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Dodajte animacijo za gumb */
+        .add-animation {
+            transform: scale(1.2);
+            background-color: #4CAF50 !important;
+        }
+        
+        .add-to-cart {
+            transition: transform 0.3s, background-color 0.3s;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - StyleHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Cory's</div>
+            <div class="nav-buttons">
+                <a href="{{ url_for('index') }}" class="nav-button">Home</a>
+                <a href="{{ url_for('category') }}" class="nav-button">Category</a>
+                <a href="{{ url_for('about') }}" class="nav-button">About Us</a>
+                <a href="{{ url_for('cart') }}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="brand-section">
+        <h1 class="brand-title">CHOOSE YOUR BRAND</h1>
+        
+        <div class="brand-grid">
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='lacoste') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/lacoste.jpg') }}" alt="Brand 1">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='polo') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/polo.jpg') }}" alt="Brand 2">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='burberry') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/burbery.jpg') }}" alt="Brand 3">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='dior') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/dior.jpg') }}" alt="Brand 4">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='nike') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/nike.jpg') }}" alt="Brand 5">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='balmain') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/balmain.jpg') }}" alt="Brand 6">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='bape') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/bape.jpg') }}" alt="Brand 7">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='ami') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/ami.webp') }}" alt="Brand 8">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='jordan') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/jordan.jpg') }}" alt="Brand 9">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='adidas') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/adidas.jpg') }}" alt="Brand 10">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='amiri') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/amiri.jpg') }}" alt="Brand 11">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='balenciaga') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/balenciaga.jpg') }}" alt="Brand 12">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='versace') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/versace.webp') }}" alt="Brand 13">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='cortez') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/cortez.jpg') }}" alt="Brand 14">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Dolce & Gabbana') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/Dolce & Gabbana.webp') }}" alt="Brand 15">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Tommy Hilfiger') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/tommy.jpg') }}" alt="Brand 16">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Calvin Klein') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/ck.jpg') }}" alt="Brand 17">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='gucci') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/gucci.jpg') }}" alt="Brand 18">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='gallery dept.') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/gallery.webp') }}" alt="Brand 19">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='puma') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/puma.jpg') }}" alt="Brand 20">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Karl Lagerfeld') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/karl.jpg') }}" alt="Brand 21">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='hellstar') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/hellstar.webp') }}" alt="Brand 22">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Casablanca') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/casa.jpg') }}" alt="Brand 23">
+                    </div>
+                </a>
+            </div>
+            
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='The North Face') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/tnf.jpg') }}" alt="Brand 24">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='prada') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/prada.jpg') }}" alt="Brand 25">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='saint') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/saint.webp') }}" alt="Brand 26">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='trapstar') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/trapstar.jpg') }}" alt="Brand 27">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='armani') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/armani.jpg') }}" alt="Brand 28">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='canada') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/canada.jpg') }}" alt="Brand 29">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Louis Vuitton') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/lv.jpg') }}" alt="Brand 30">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='valentino') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/valentino.jpg') }}" alt="Brand 31">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='essentials') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/essentials.jpg') }}" alt="Brand 32">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='moncler') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/moncler.jpg') }}" alt="Brand 33">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='syna') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/syna.webp') }}" alt="Brand 34">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Off-White') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/off.jpg') }}" alt="Brand 35">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='fendi') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/fendi.jpg') }}" alt="Brand 36">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='spider') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/spider.webp') }}" alt="Brand 37">
+                    </div>
+                </a>
+            </div>
+            <div class="brand-box">
+                <a href="{{ url_for('brand_products', brand_name='Stone Island') }}" class="brand-link">
+                    <div class="brand-image">
+                        <img src="{{ url_for('static', filename='images/stone.jpg') }}" alt="Brand 38">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/corysreps/?hl=en">Instagram</a>
+                    <a href="https://www.tiktok.com/@corysreps">TikTok</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Cory's.</p>
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preberi izdelke iz localStorage
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const cartCount = document.querySelector('.cart-count');
+            
+            // Posodobi števec izdelkov v košarici
+            cartCount.textContent = cartItems.length;
+        });
+    </script>
+    <style>
+        /* Modern styling for the site */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-button {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .cart-icon {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .cart-icon i {
+            font-size: 1.5rem;
+        }
+        
+        .cart-count {
+            background-color: #ff0000;
+            color: #ffffff;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Brand Section Styles */
+        .brand-section {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .brand-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        .brand-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #333;
+        }
+        
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .brand-box {
+            aspect-ratio: 1/1; /* This makes the boxes square */
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .brand-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .brand-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .brand-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 80px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 20px;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section  {
+            text-align: center;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #ffffff;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .brand-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .brand-section {
+                margin-top: 140px;
+            }
+            
+            .brand-title {
+                font-size: 2rem;
+            }
+            
+            .brand-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .brand-grid {
+                grid-template-columns: repeat(1, 1fr);
+                max-width: 280px;
+            }
+            
+            .brand-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+</body>
+</html>
