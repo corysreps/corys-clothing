@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Košarica | Cory's</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -15,7 +16,7 @@
             <div class="nav-links">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('category') }}">Category</a>
-                <a href="{{ url_for('about') }}">About Us</a>
+        
             </div>
             <div class="cart-icon-container">
                 <a href="{{ url_for('cart') }}" class="cart-icon">
@@ -27,6 +28,10 @@
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
+            </div>
+            <div class="mobile-menu">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('category') }}">Category</a>
             </div>
         </div>
     </nav>
@@ -131,7 +136,9 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <h2>Naročilo uspešno oddano!</h2>
-                <p>Hvala za vaše naročilo. Kontaktirali vas bomo preko Instagram-a ali e-pošte za nadaljnje informacije.</p>
+                <p>Hvala za vaše naročilo. Kontaktirali vas bomo preko Instagram-a ali e-pošte za nadaljnje informacije.
+                    Ce ne najdete e-pošte poglejte v spam mapi.
+                </p>
                 
                 <div class="order-details">
                     <div class="detail-row">
@@ -181,6 +188,7 @@
             const successStep = document.getElementById('success-step');
             
             const goToCheckoutBtn = document.getElementById('go-to-checkout-button');
+            goToCheckoutBtn.addEventListener('click', showCheckoutView);
             const backToCartBtn = document.getElementById('back-to-cart');
             const checkoutForm = document.getElementById('checkout-form');
             
@@ -209,29 +217,34 @@
             }
             
             function showCheckoutView() {
-                if (cartItems.length === 0) {
-                    alert('Vaša košarica je prazna. Dodajte izdelke v košarico.');
-                    return;
+                // Preveri, ali so vse velikosti izbrane
+                const sizeSelects = document.querySelectorAll('.size-select');
+                for (const select of sizeSelects) {
+                    if (!select.value) {
+                        alert('Prosimo, izberite velikost za vse izdelke, preden nadaljujete.');
+                        return;
+                    }
                 }
-                
+
+                // Nadaljujte na blagajno, če so vse velikosti izbrane
                 cartView.style.display = 'none';
                 checkoutView.style.display = 'flex';
                 successView.style.display = 'none';
-                
+
                 cartStep.classList.remove('active');
                 checkoutStep.classList.add('active');
                 successStep.classList.remove('active');
-                
+
                 pageTitle.textContent = 'Oddaja naročila';
-                
-                // Update checkout items display
+
+                // Posodobite prikaz izdelkov na blagajni
                 let checkoutHTML = '';
                 let totalPrice = 0;
-                
+
                 cartItems.forEach(item => {
                     totalPrice += parseFloat(item.price);
                     const size = item.size ? ` (${item.size})` : '';
-                    
+
                     checkoutHTML += `
                         <div class="checkout-item">
                             <div class="checkout-item-name">${item.name}${size}</div>
@@ -239,10 +252,10 @@
                         </div>
                     `;
                 });
-                
+
                 checkoutItemsContainer.innerHTML = checkoutHTML;
                 checkoutTotalPrice.textContent = totalPrice.toFixed(2) + '€';
-                
+
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
             
@@ -270,7 +283,6 @@
             }
             
             // Button event listeners
-            goToCheckoutBtn.addEventListener('click', showCheckoutView);
             backToCartBtn.addEventListener('click', showCartView);
             
             // Submit checkout form
@@ -467,6 +479,24 @@
             } else {
                 showCartView();
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const mobileMenu = document.querySelector('.mobile-menu');
+
+            hamburgerMenu.addEventListener('click', function () {
+                mobileMenu.classList.toggle('active'); // Prikaži/skrij mobilni meni
+                hamburgerMenu.classList.toggle('open'); // Dodaj/odstrani animacijo hamburger meniju
+            });
+
+            // Zapri meni, če uporabnik klikne kjerkoli drugje
+            document.addEventListener('click', function (event) {
+                if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    hamburgerMenu.classList.remove('open');
+                }
+            });
         });
     </script>
 
@@ -1247,6 +1277,30 @@
             transition: 0.3s;
         }
 
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .mobile-menu a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover {
+            background-color: var(--secondary-color);
+        }
+
         @media (max-width: 768px) {
             .navbar .nav-links {
                 position: fixed;
@@ -1268,19 +1322,115 @@
             }
             
             .hamburger-menu {
-                display: flex;
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    height: 18px;
+    z-index: 1100;
+}
+
+.hamburger-menu .bar {
+    height: 2px;
+    width: 100%;
+    background-color: var(--primary-color);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animacija za aktivni hamburger meni */
+.hamburger-menu.open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger-menu.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Prikaz hamburger menija na manjših zaslonih */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: flex;
+    }
+}
+
+.mobile-menu {
+    display: none; /* Skrij meni privzeto */
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0; /* Začetna nevidnost */
+    transform: translateY(-20px); /* Začetni premik navzgor */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-menu.active {
+    display: flex; /* Prikaži meni, ko je aktiven */
+    opacity: 1; /* Prikaz menija */
+    transform: translateY(0); /* Premik na začetno pozicijo */
+    transition-delay: 0.2s; /* Dodan zamik za prikaz */
+}
+
+            .cart-container {
+                padding: 10px;
             }
-            
-            .hamburger-menu.active .bar:nth-child(1) {
-                transform: translateY(8px) rotate(45deg);
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                margin-bottom: 10px;
             }
-            
-            .hamburger-menu.active .bar:nth-child(2) {
-                opacity: 0;
+
+            .cart-item img {
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
             }
-            
-            .hamburger-menu.active .bar:nth-child(3) {
-                transform: translateY(-8px) rotate(-45deg);
+
+            .cart-item-details {
+                width: 100%;
+            }
+
+            .cart-item-details h3 {
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+
+            .cart-item-details p {
+                font-size: 0.9rem;
+            }
+
+            .size-select {
+                width: 100%;
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+
+            .cart-summary {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .checkout-button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .continue-shopping a {
+                font-size: 0.9rem;
             }
         }
 
@@ -1463,6 +1613,7 @@
             color: var(--light-text);
             font-size: 0.9rem;
         }
+
     </style>
 </body>
 </html>
